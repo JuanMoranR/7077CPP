@@ -60,13 +60,7 @@ void Robot::TurnOffSolenoids (frc::Timer *Timer, frc::DoubleSolenoid *dossol, fr
  
  
 void Robot::RobotInit() {
- m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
- m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
- frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
- 
- //This starts the Camera Instance.sdf
-   /*CameraServer.getInstance().startAutomaticCapture();
-  */
+
    frc::DifferentialDrive m_myRobot{*m_leftGroup, *m_m_controllerGroup};
    frc::XboxController *m_controller = new frc::XboxController(0); //the number is the port in the Driver Station
 }
@@ -139,7 +133,7 @@ void Robot::TeleopPeriodic() {
    //m_myRobot.tankDrive(RDTMotor/1.3, LDTMotor/1.3);
    //m_myRobot.tankDrive(m_controller.getY(), m_controller.getX());
 
-   if (m_controller->GetRawButton(kGamepadButtonStart))
+   if (m_controller->GetRawButton(kGamepadButtonStart)== true)
    {
    compressor->SetClosedLoopControl(true);
    compressor->SetClosedLoopControl(false);
@@ -147,22 +141,24 @@ void Robot::TeleopPeriodic() {
    bool pressureSwitch = compressor->GetPressureSwitchValue();
    double current = compressor->GetCompressorCurrent();
    }
+   
    if(m_controller->GetRawButton(kGamepadButtonA)==true)
    {
-     dosSol->Set(DoubleSolenoid::kForward); //
+     dosSol->Set(DoubleSolenoid::kOff); //
    }
    if(m_controller->GetRawButton(kGamepadButtonB)==true)
    {
-     dosSol->Set(frc::DoubleSolenoid::kReverse);
+     dosSol->Set(frc::DoubleSolenoid::kOff);
    }
    if(m_controller->GetRawButton(kGamepadButtonX)==true)
    {
-     tresSol->Set(frc::DoubleSolenoid::kForward); //
+     tresSol->Set(frc::DoubleSolenoid::kOff); //
    }
    if(m_controller->GetRawButton(kGamepadButtonY)==true)
    {
-     tresSol->Set(frc::DoubleSolenoid::kReverse);
+     tresSol->Set(frc::DoubleSolenoid::kOff);
    }
+   
    if(m_controller->GetY(GenericHID::kLeftHand) <= -.5 && m_controller->GetY(GenericHID::kLeftHand) != 0 ){
      m_myRobot.TankDrive(-m_controller->GetY(GenericHID::kLeftHand),-m_controller->GetY(GenericHID::kLeftHand));
    } //Front
@@ -185,6 +181,28 @@ void Robot::TeleopPeriodic() {
  
 void Robot::TestPeriodic() {}
  
+int Robot::kGamepadButtonA = 1;// A button
+int Robot::kGamepadButtonB = 2;         // B button
+int Robot::kGamepadButtonX = 3;         // X button
+int Robot::kGamepadButtonY = 4;         // Y button
+int Robot::kGamepadButtonShoulderL = 5; // Left Bumper
+int Robot::kGamepadButtonShoulderR = 6; // Right Bumper
+int Robot::kGamepadButtonBack = 7;      // Back button
+int Robot::kGamepadButtonStart = 8;     // Start Button
+int Robot::kGamepadButtonLeftStick = 9; 
+int Robot::kGamepadButtonm_controllerStick = 10;
+int Robot::kGamepadButtonMode = -1;
+
+ 
+int Robot::kMotorPortFrontLeft = 1;
+int Robot::kMotorPortRearLeft = 2;
+int Robot::kMotorPortFrontm_controller = 3;
+int Robot::kMotorPortRearm_controller = 4;
+
+ int Robot::kControllerPort = 1;
+  int Robot::kMotorPortArm = 9;
+  int Robot::kMotorPortClaw;
+  int Robot::kGamepadButtonLogitech;
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }

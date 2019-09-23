@@ -23,11 +23,12 @@
 #include <frc/Spark.h>
 #include <frc/Compressor.h>
 #include <frc/Timer.h>
+#include <frc/TimedRobot.h>
  
  
  
  
-class Robot : public frc::IterativeRobot {
+class Robot : public frc::TimedRobot {
 public:
  void RobotInit() override;
  void RobotPeriodic() override;
@@ -39,7 +40,7 @@ public:
  
  
  //0 is m_controller whilst 1 is left for the drive motors.
- static int kControllerPort;
+static int kControllerPort;
  static int kMotorPortArm;
  static int kMotorPortClaw;
  static int kGamepadButtonLogitech;
@@ -50,20 +51,19 @@ public:
  static int kMotorPortFrontm_controller;
  static int kMotorPortRearm_controller;
  
- enum ControllerButtons : int const {
-kGamepadButtonA = 1,         // A button
-kGamepadButtonB = 2,         // B button
-kGamepadButtonX = 3,         // X button
-kGamepadButtonY = 4,         // Y button
-kGamepadButtonShoulderL = 5, // Left Bumper
-kGamepadButtonShoulderR = 6, // Right Bumper
-kGamepadButtonBack = 7,      // Back button
-kGamepadButtonStart = 8,     // Start Button
-kGamepadButtonLeftStick = 9, 
-kGamepadButtonm_controllerStick = 10,
-kGamepadButtonMode = -1,
+static int kGamepadButtonA;         // A button
+static int kGamepadButtonB;         // B button
+static int kGamepadButtonX;         // X button
+static int kGamepadButtonY;         // Y button
+static int kGamepadButtonShoulderL; // Left Bumper
+static int kGamepadButtonShoulderR; // Right Bumper
+static int kGamepadButtonBack;     // Back button
+static int kGamepadButtonStart;     // Start Button
+static int kGamepadButtonLeftStick; 
+static int kGamepadButtonm_controllerStick;
+static int kGamepadButtonMode;
  
- };
+
 
     
  double LDTMotor;
