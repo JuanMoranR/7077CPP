@@ -28,7 +28,7 @@
  
  
  
-class Robot : public frc::TimedRobot {
+class Robot : public frc::IterativeRobot {
 public:
  void RobotInit() override;
  void RobotPeriodic() override;
@@ -40,57 +40,34 @@ public:
  
  
  //0 is m_controller whilst 1 is left for the drive motors.
-static int kControllerPort;
- static int kMotorPortArm;
- static int kMotorPortClaw;
- static int kGamepadButtonLogitech;
- bool buttonValue;
- 
- static int kMotorPortFrontLeft;
- static int kMotorPortRearLeft;
- static int kMotorPortFrontm_controller;
- static int kMotorPortRearm_controller;
- 
-static int kGamepadButtonA;         // A button
-static int kGamepadButtonB;         // B button
-static int kGamepadButtonX;         // X button
-static int kGamepadButtonY;         // Y button
-static int kGamepadButtonShoulderL; // Left Bumper
-static int kGamepadButtonShoulderR; // Right Bumper
-static int kGamepadButtonBack;     // Back button
-static int kGamepadButtonStart;     // Start Button
-static int kGamepadButtonLeftStick; 
-static int kGamepadButtonm_controllerStick;
-static int kGamepadButtonMode;
- 
 
-
-    
+ enum Motors
+ {
+   kMotorPortLeftFront = 1,
+   kMotorPortLeftRear = 3,
+   kMotorPortRightFront = 8,
+   kMotorPortRightRear = 5,
+   kMotorPortElevator = 9,
+   kControllerPort = 0,
+ };
+ 
  double LDTMotor;
  double RDTMotor;
  
- frc::Spark *m_frontLeft = new frc::Spark(kMotorPortFrontLeft);
- frc::Spark *m_rearLeft = new frc::Spark(kMotorPortRearLeft);
- frc::SpeedController *m_leftGroup = new frc::SpeedControllerGroup(*m_rearLeft, *m_frontLeft);
- frc::Spark *m_frontm_controller = new frc::Spark(kMotorPortFrontm_controller);
- frc::Spark *m_rearm_controller = new frc::Spark(kMotorPortRearm_controller);
- frc::SpeedControllerGroup *m_m_controllerGroup = new frc::SpeedControllerGroup(*m_rearm_controller, *m_frontm_controller);
- frc::Spark *m_arm = new frc::Spark(kMotorPortArm);
+ frc::Spark *m_FrontLeft = new frc::Spark(kMotorPortLeftFront);
+ frc::Spark *m_RearLeft = new frc::Spark(kMotorPortLeftRear);
+ frc::SpeedController *mLeftGroup = new frc::SpeedControllerGroup(*mFrontLeft, *mRearLeft);
+ frc::Spark *mFrontRight = new frc::Spark(kMotorPortFrontm_controller);
+ frc::Spark *m_RearRight = new frc::Spark(kMotorPortRearm_controller);
+ frc::SpeedControllerGroup *mRightGroup = new frc::SpeedControllerGroup(*m_rearm_controller, *m_frontm_controller);
+
+frc::DifferentialDrive m_drive{*mLeftGroup,*mRightGroup};
+
  frc::DoubleSolenoid *dosSol = new frc::DoubleSolenoid(0,1);
  frc::DoubleSolenoid *tresSol = new frc::DoubleSolenoid (6,7);
  frc::Compressor *compressor;
  
  
- 
-private:
- 
- frc::SendableChooser<std::string> m_chooser;
- const std::string kAutoNameDefault = "Default";
- const std::string kAutoNameCustom = "My Auto";
- std::string m_autoSelected;
-   // void SecondTimer(); This function is null until it is needed
-
-
   void TurnOffSolenoids (frc::Timer *Timer, frc::DoubleSolenoid *dossol, frc::DoubleSolenoid *tressol);
 
 };

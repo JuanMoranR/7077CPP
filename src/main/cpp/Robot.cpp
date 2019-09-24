@@ -27,27 +27,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace frc;
- 
-// This function is nulled untill a opurtunity to use it arises
- 
-/*
-void Robot::SecondTimer(frc::Timer *timer, float value)
-{
- 
-   this->timer = *timer;
-   timer->Reset(); // resets the time back to Zero
- 
-   if(timer->HasPeriodPassed(value)) // If the value  seconds have passed return a true statement
-   {
-     timer->Stop(); // Stop the timer
-   }
- 
-}
 
-*/
 
-// Turns off the solenoids two seconds before the match ends
- 
 void Robot::TurnOffSolenoids (frc::Timer *Timer, frc::DoubleSolenoid *dossol, frc::DoubleSolenoid *tressol)
 {
  
@@ -180,29 +161,6 @@ void Robot::TeleopPeriodic() {
 }
  
 void Robot::TestPeriodic() {}
- 
-int Robot::kGamepadButtonA = 1;// A button
-int Robot::kGamepadButtonB = 2;         // B button
-int Robot::kGamepadButtonX = 3;         // X button
-int Robot::kGamepadButtonY = 4;         // Y button
-int Robot::kGamepadButtonShoulderL = 5; // Left Bumper
-int Robot::kGamepadButtonShoulderR = 6; // Right Bumper
-int Robot::kGamepadButtonBack = 7;      // Back button
-int Robot::kGamepadButtonStart = 8;     // Start Button
-int Robot::kGamepadButtonLeftStick = 9; 
-int Robot::kGamepadButtonm_controllerStick = 10;
-int Robot::kGamepadButtonMode = -1;
-
- 
-int Robot::kMotorPortFrontLeft = 1;
-int Robot::kMotorPortRearLeft = 2;
-int Robot::kMotorPortFrontm_controller = 3;
-int Robot::kMotorPortRearm_controller = 4;
-
- int Robot::kControllerPort = 1;
-  int Robot::kMotorPortArm = 9;
-  int Robot::kMotorPortClaw;
-  int Robot::kGamepadButtonLogitech;
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
