@@ -8,41 +8,28 @@
 
 #include "Robot.h"
 #include <iostream>
-#include <string>
-#include <frc/XboxController.h>
-#include <frc/IterativeRobot.h>
-#include <frc/smartdashboard/SendableChooser.h>
-#include <frc/SpeedControllerGroup.h>
-#include <frc/GenericHID.h>
-#include <frc/Joystick.h>
-#include <frc/Timer.h>
-#include <frc/IterativeRobot.h>
-#include <frc/Spark.h>
-#include <frc/SpeedController.h>
-#include <frc/DoubleSolenoid.h>
-#include <frc/Solenoid.h>
-#include <frc/Spark.h>
-#include <frc/Compressor.h>
-#include <frc/drive/DifferentialDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-using namespace frc;
 
 
-void Robot::TurnOffSolenoids (frc::Timer *Timer, frc::DoubleSolenoid *dossol, frc::DoubleSolenoid *tressol)
+void Robot::TurnOffSolenoids (frc::Timer *Timer, frc::DoubleSolenoid *FrontSol, frc::DoubleSolenoid *RearSol)
 {
  
    if (Timer->HasPeriodPassed(148))
      {
-           dossol->~DoubleSolenoid(); // Calls the deconstructor of the dossol double solenoid turning it off
-           tressol->~DoubleSolenoid(); // Calls the deconstructor of the tresol double solenoid turning it off
+           FrontSol->~DoubleSolenoid(); // Calls the deconstructor of the dossol double solenoid turning it off
+           RearSol->~DoubleSolenoid(); // Calls the deconstructor of the tresol double solenoid turning it off
      }
 }
  
  
 void Robot::RobotInit() {
 
-   frc::DifferentialDrive m_myRobot{*m_leftGroup, *m_m_controllerGroup};
+  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
+  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+
+   frc::DifferentialDrive m_myRobot{*mLeftGroup, *mRightGroup};
    frc::XboxController *m_controller = new frc::XboxController(0); //the number is the port in the Driver Station
 }
  
@@ -68,16 +55,17 @@ void Robot::RobotPeriodic() {}
 * make sure to add them to the chooser code above as well.
 */
 void Robot::AutonomousInit() {
- m_autoSelected = m_chooser.GetSelected();
- // m_autoSelected = SmartDashboard::GetString(
- //     "Auto Selector", kAutoNameDefault);
- std::cout << "Auto selected: " << m_autoSelected << std::endl;
- 
- if (m_autoSelected == kAutoNameCustom) {
-   // Custom Auto goes here
- } else {
-   // Default Auto goes here
- }
+  m_autoSelected = m_chooser.GetSelected();
+  // m_autoSelected = SmartDashboard::GetString(
+  //     "Auto Selector", kAutoNameDefault);
+  std::cout << "Auto selected: " << m_autoSelected << std::endl;
+
+  if (m_autoSelected == kAutoNameCustom) {
+    // Custom Auto goes here
+  } else {
+    // Default Auto goes here
+  }
+}
  
  /*
    compressor->SetClosedLoopControl(true);
@@ -87,34 +75,33 @@ void Robot::AutonomousInit() {
    double current = compressor->GetCompressorCurrent();
    */
  
-}
  
 void Robot::AutonomousPeriodic() {
- if (m_autoSelected == kAutoNameCustom) {
-   // Custom Auto goes here
- } else {
-   // Default Auto goes here
- }
+  if (m_autoSelected == kAutoNameCustom) {
+    // Custom Auto goes here
+  } else {
+    // Default Auto goes here
+  }
 }
  
 void Robot::TeleopInit() {}
  
 void Robot::TeleopPeriodic() {
 
- Timer *timer; // Starts a timer instance for use of the turn off solenoids function
+ frc::Timer *timer; // Starts a timer instance for use of the turn off solenoids function
 
-   TurnOffSolenoids(timer,dosSol,tresSol);
+   TurnOffSolenoids(timer,FrontSol,RearSol);
 
    frc::XboxController* m_controller(0);
-   frc::DifferentialDrive m_myRobot{*m_leftGroup, *m_m_controllerGroup};
+   frc::DifferentialDrive m_myRobot{*mLeftGroup, *mRightGroup};
  
- //LDTMotor = m_controller.getY(Hand.km_controller);
-   //RDTMotor = m_controller.getY(Hand.kLeft);
+   LDTMotor = -m_controller->GetY(frc::GenericHID::kLeftHand);
+   RDTMotor =  m_controller->GetY(frc::GenericHID::kRightHand);
   
    //m_myRobot.tankDrive(RDTMotor/1.3, LDTMotor/1.3);
    //m_myRobot.tankDrive(m_controller.getY(), m_controller.getX());
 
-   if (m_controller->GetRawButton(kGamepadButtonStart)== true)
+   if (m_controller->GetStartButton())
    {
    compressor->SetClosedLoopControl(true);
    compressor->SetClosedLoopControl(false);
@@ -123,41 +110,23 @@ void Robot::TeleopPeriodic() {
    double current = compressor->GetCompressorCurrent();
    }
    
-   if(m_controller->GetRawButton(kGamepadButtonA)==true)
+   if(m_controller->GetAButton())
    {
-     dosSol->Set(DoubleSolenoid::kOff); //
+     FrontSol->Set(frc::DoubleSolenoid::kForward); //
    }
-   if(m_controller->GetRawButton(kGamepadButtonB)==true)
+   if(m_controller->GetBButton())
    {
-     dosSol->Set(frc::DoubleSolenoid::kOff);
+     FrontSol->Set(frc::DoubleSolenoid::kReverse);
    }
-   if(m_controller->GetRawButton(kGamepadButtonX)==true)
+   if(m_controller->GetXButton())
    {
-     tresSol->Set(frc::DoubleSolenoid::kOff); //
+     RearSol->Set(frc::DoubleSolenoid::kForward); //
    }
-   if(m_controller->GetRawButton(kGamepadButtonY)==true)
+   if(m_controller->GetYButton())
    {
-     tresSol->Set(frc::DoubleSolenoid::kOff);
+     RearSol->Set(frc::DoubleSolenoid::kReverse); 
    }
    
-   if(m_controller->GetY(GenericHID::kLeftHand) <= -.5 && m_controller->GetY(GenericHID::kLeftHand) != 0 ){
-     m_myRobot.TankDrive(-m_controller->GetY(GenericHID::kLeftHand),-m_controller->GetY(GenericHID::kLeftHand));
-   } //Front
-   else if (m_controller->GetY(GenericHID::kLeftHand) >= .5 && m_controller->GetY (GenericHID::kLeftHand)!= 0){
-     m_myRobot.TankDrive( - (m_controller->GetY(GenericHID::kLeftHand)), -( m_controller->GetY(GenericHID::kLeftHand)) );
-   } //Back
-  
-   else if(m_controller->GetX(GenericHID::kLeftHand) <= .5 && m_controller->GetX(GenericHID::kLeftHand) != 0 ){
-     m_myRobot.TankDrive(0,-( m_controller->GetX(GenericHID::kLeftHand) ) );
-   } //Left
-  
-   else if (m_controller->GetX(GenericHID::kLeftHand) >= -.5 && m_controller->GetX (GenericHID::kLeftHand)!= 0){
-     m_myRobot.TankDrive(m_controller->GetX(GenericHID::kLeftHand), 0);
-   } //right
-   else {
-     m_myRobot.TankDrive(0,0);
-   }//Off0
- 
 }
  
 void Robot::TestPeriodic() {}

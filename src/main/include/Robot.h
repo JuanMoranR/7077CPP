@@ -20,10 +20,11 @@
 #include <frc/SpeedController.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/Solenoid.h>
-#include <frc/Spark.h>
 #include <frc/Compressor.h>
 #include <frc/Timer.h>
 #include <frc/TimedRobot.h>
+#include <frc/drive/DifferentialDrive.h>
+
  
  
  
@@ -54,20 +55,26 @@ public:
  double LDTMotor;
  double RDTMotor;
  
- frc::Spark *m_FrontLeft = new frc::Spark(kMotorPortLeftFront);
- frc::Spark *m_RearLeft = new frc::Spark(kMotorPortLeftRear);
- frc::SpeedController *mLeftGroup = new frc::SpeedControllerGroup(*mFrontLeft, *mRearLeft);
- frc::Spark *mFrontRight = new frc::Spark(kMotorPortFrontm_controller);
- frc::Spark *m_RearRight = new frc::Spark(kMotorPortRearm_controller);
- frc::SpeedControllerGroup *mRightGroup = new frc::SpeedControllerGroup(*m_rearm_controller, *m_frontm_controller);
+ frc::Spark *mFrontLeft = new frc::Spark(kMotorPortLeftFront);
+ frc::Spark *mRearLeft = new frc::Spark(kMotorPortLeftRear);
+ frc::SpeedControllerGroup *mLeftGroup = new frc::SpeedControllerGroup(*mRearLeft, *mFrontLeft);
+ frc::Spark *mFrontRight = new frc::Spark(kMotorPortRightFront);
+ frc::Spark *mRearRight = new frc::Spark(kMotorPortRightRear);
+ frc::SpeedControllerGroup *mRightGroup = new frc::SpeedControllerGroup(*mRearRight, *mFrontRight);
 
-frc::DifferentialDrive m_drive{*mLeftGroup,*mRightGroup};
+ frc::DifferentialDrive mDrive{*mLeftGroup,*mRightGroup};
 
- frc::DoubleSolenoid *dosSol = new frc::DoubleSolenoid(0,1);
- frc::DoubleSolenoid *tresSol = new frc::DoubleSolenoid (6,7);
+ frc::DoubleSolenoid *FrontSol = new frc::DoubleSolenoid(0,1);
+ frc::DoubleSolenoid *RearSol = new frc::DoubleSolenoid (6,7);
  frc::Compressor *compressor;
  
  
-  void TurnOffSolenoids (frc::Timer *Timer, frc::DoubleSolenoid *dossol, frc::DoubleSolenoid *tressol);
+  void TurnOffSolenoids (frc::Timer *Timer, frc::DoubleSolenoid *, frc::DoubleSolenoid *);
+
+  private:
+  frc::SendableChooser<std::string> m_chooser;
+  const std::string kAutoNameDefault = "Default";
+  const std::string kAutoNameCustom = "My Auto";
+  std::string m_autoSelected;
 
 };
